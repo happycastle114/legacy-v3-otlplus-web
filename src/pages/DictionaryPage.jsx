@@ -5,9 +5,8 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
-import { appBoundClassNames as classNames } from '../common/boundClassNames';
-import { CourseListCode } from '@/shapes/enum';
-
+import { Content } from '@/common/styled/Layout';
+import { PageGridDictionary, AreaCourseListTabs, AreaCourseList, AreaCourseDetail } from '@/common/styled/Layout';
 import CourseListSection from '../components/sections/dictionary/courselist/CourseListSection';
 import CourseDetailSection from '../components/sections/dictionary/coursedetail/CourseDetailSection';
 import CourseListTabs from '../components/sections/dictionary/courselist/CourseListTabs';
@@ -22,6 +21,7 @@ import {
 import { closeSearch, reset as resetSearch } from '../redux/actions/dictionary/search';
 import { performSearchCourses } from '../common/commonOperations';
 import { parseQueryString } from '@/common/utils/parseQueryString';
+import { CourseListCode } from '@/shapes/enum';
 
 const DictionaryPage = () => {
   const { t } = useTranslation();
@@ -71,15 +71,19 @@ const DictionaryPage = () => {
   }, [location.search]);
 
   return (
-    <>
-      <section className={classNames('content', 'content--no-scroll')}>
-        <div className={classNames('page-grid', 'page-grid--dictionary')}>
+    <Content noScroll>
+      <PageGridDictionary>
+        <AreaCourseListTabs>
           <CourseListTabs />
+        </AreaCourseListTabs>
+        <AreaCourseList>
           <CourseListSection />
+        </AreaCourseList>
+        <AreaCourseDetail>
           <CourseDetailSection />
-        </div>
-      </section>
-    </>
+        </AreaCourseDetail>
+      </PageGridDictionary>
+    </Content>
   );
 };
 

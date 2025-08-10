@@ -1,16 +1,21 @@
 import React from 'react';
-import { useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { appBoundClassNames as classNames } from '../common/boundClassNames';
+import { Content } from '@/common/styled/Layout';
+import {
+  PageGridPlanner,
+  AreaPlannerTabs,
+  AreaCourseListTabsPlanner,
+  AreaPlannerAndInfos,
+  AreaCourseListPlanner,
+  AreaCourseManage,
+} from '@/common/styled/Layout';
 
 import { reset as resetCourseFocus } from '../redux/actions/planner/itemFocus';
 import { reset as resetList } from '../redux/actions/planner/list';
 import { reset as resetSearch } from '../redux/actions/planner/search';
 import { reset as resetPlanner } from '../redux/actions/planner/planner';
-
-import plannerShape from '../shapes/model/planner/PlannerShape';
 
 import Divider from '../components/Divider';
 import PlannerTabs from '../components/sections/planner/plannerandinfos/PlannerTabs';
@@ -40,36 +45,42 @@ const PlannerPage = () => {
   }, [dispatch]);
 
   return (
-    <>
-      <section className={classNames('content', 'content--no-scroll')}>
-        <div className={classNames('page-grid', 'page-grid--planner')}>
+    <Content noScroll>
+      <PageGridPlanner>
+        <AreaPlannerTabs>
           <PlannerTabs />
+        </AreaPlannerTabs>
+        <AreaCourseListTabsPlanner>
           <CourseListTabs />
-          <div className={classNames('section', 'section--planner-and-infos')}>
-            <PlannerSubSection />
-            <Divider
-              orientation={{ desktop: Divider.Orientation.VERTICAL, mobile: Divider.Orientation.HORIZONTAL }}
-              isVisible={{ desktop: true, mobile: false }}
-              gridArea="divider-main"
-            />
-            <TrackSubSection />
-            <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={{ desktop: true, mobile: false }} gridArea="divider-sub-1" />
-            <SummarySubSection />
-          </div>
+        </AreaCourseListTabsPlanner>
+        <AreaPlannerAndInfos>
+          <PlannerSubSection />
+          <Divider
+            orientation={{ desktop: Divider.Orientation.VERTICAL, mobile: Divider.Orientation.HORIZONTAL }}
+            isVisible={{ desktop: true, mobile: false }}
+            gridArea="divider-main"
+          />
+          <TrackSubSection />
+          <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={{ desktop: true, mobile: false }} gridArea="divider-sub-1" />
+          <SummarySubSection />
+        </AreaPlannerAndInfos>
+        <AreaCourseListPlanner>
           <CourseListSection />
+        </AreaCourseListPlanner>
+        <AreaCourseManage>
           <CourseManageSection />
-          {isTrackSettingsSectionOpen && selectedPlanner && <TrackSettingsSection />}
-        </div>
-        <BetaPopup
-          title="졸업플래너 베타 서비스 안내"
-          content={[
-            '졸업플레너 서비스는 현재 베타 상태입니다.',
-            '일부 학점 계산이 정확하지 않거나 기능 사용이 불편할 수 있으며, 이는 정식 출시 때 개선될 예정입니다.',
-          ]}
-          link="https://sparcs.page.link/otl-feedback"
-        />
-      </section>
-    </>
+        </AreaCourseManage>
+        {isTrackSettingsSectionOpen && selectedPlanner && <TrackSettingsSection />}
+      </PageGridPlanner>
+      <BetaPopup
+        title="졸업플래너 베타 서비스 안내"
+        content={[
+          '졸업플레너 서비스는 현재 베타 상태입니다.',
+          '일부 학점 계산이 정확하지 않거나 기능 사용이 불편할 수 있으며, 이는 정식 출시 때 개선될 예정입니다.',
+        ]}
+        link="https://sparcs.page.link/otl-feedback"
+      />
+    </Content>
   );
 };
 

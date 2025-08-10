@@ -187,3 +187,103 @@ export const SectionSyllabus = styled(Section)`
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 `;
+
+export const PageGridDictionary = styled.div`
+  display: grid;
+  padding-left: 12px;
+  padding-right: 12px;
+  @media (min-aspect-ratio: calc(4/3)) {
+    grid-template-columns: 200px 12px 1fr 12px 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: 'course-list-tabs . course-list . course-detail';
+  }
+  @media (max-aspect-ratio: calc(4/3)) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 48px 1fr;
+    grid-template-areas: 'course-list-tabs' 'course-list';
+  }
+`;
+
+export const AreaCourseListTabs = styled.div`
+  grid-area: course-list-tabs;
+`;
+export const AreaCourseList = styled(Section)`
+  grid-area: course-list;
+`;
+export const AreaCourseDetail = styled(Section)`
+  grid-area: course-detail;
+`;
+
+export const PageGridPlanner = styled.div`
+  display: grid;
+  padding-left: 12px;
+  padding-right: 12px;
+  @media (min-aspect-ratio: calc(4/3)) {
+    grid-template-columns: 200px 12px 360px 12px 1fr;
+    grid-template-rows: 48px 1fr 80px;
+    grid-template-areas: 'planner-tabs planner-tabs planner-tabs planner-tabs planner-tabs' 'planner-and-infos planner-and-infos . course-manage course-manage' 'course-list-tabs course-list . course-manage course-manage';
+  }
+  @media (max-aspect-ratio: calc(4/3)) {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: 'planner-and-infos';
+  }
+`;
+export const AreaPlannerTabs = styled.div`
+  grid-area: planner-tabs;
+`;
+export const AreaPlannerAndInfos = styled(Section)`
+  grid-area: planner-and-infos;
+  display: grid;
+`;
+export const AreaCourseListTabsPlanner = styled.div`
+  grid-area: course-list-tabs;
+`;
+export const AreaCourseListPlanner = styled(Section)`
+  grid-area: course-list;
+`;
+export const AreaCourseManage = styled(Section)`
+  grid-area: course-manage;
+`;
+
+export const PageGridTimetable = styled.div<{ mobileExpanded?: boolean }>`
+  display: grid;
+  padding-left: 12px;
+  padding-right: 12px;
+  @media (min-aspect-ratio: calc(4/3)) {
+    grid-template-columns: 200px 360px 12px 1fr;
+    grid-template-rows: 48px 1fr 12px 1fr;
+    grid-template-areas:
+      'lecture-list-tabs lecture-detail . semester-and-timetable-tabs'
+      'lecture-list lecture-detail . timetable-and-infos'
+      'lecture-list . . timetable-and-infos'
+      'lecture-list . . timetable-and-infos';
+  }
+  @media (max-aspect-ratio: calc(4/3)) {
+    padding-bottom: 0px !important;
+    grid-template-columns: 1fr;
+    grid-template-rows: ${(p) => (p.mobileExpanded ? '1fr 12px 48px 1fr 12px' : '1fr 12px 0 0 0')};
+    grid-template-areas:
+      'timetable-and-infos'
+      '.'
+      'lecture-list-tabs'
+      'lecture-list'
+      '.';
+    transition: grid-template-rows 0.2s ease-out;
+  }
+`;
+export const AreaLectureListTabs = styled.div`
+  grid-area: lecture-list-tabs;
+`;
+export const AreaLectureList = styled(Section)`
+  grid-area: lecture-list;
+`;
+export const AreaLectureDetail = styled(Section)`
+  grid-area: lecture-detail;
+`;
+export const AreaSemesterAndTimetableTabs = styled(Section)`
+  grid-area: semester-and-timetable-tabs;
+`;
+export const AreaTimetableAndInfos = styled(Section)`
+  grid-area: timetable-and-infos;
+`;

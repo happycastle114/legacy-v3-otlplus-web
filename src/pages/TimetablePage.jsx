@@ -3,7 +3,15 @@ import { useLocation } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { appBoundClassNames as classNames } from '../common/boundClassNames';
+import { Content } from '@/common/styled/Layout';
+import {
+  PageGridTimetable,
+  AreaLectureDetail,
+  AreaLectureListTabs,
+  AreaLectureList,
+  AreaSemesterAndTimetableTabs,
+  AreaTimetableAndInfos,
+} from '@/common/styled/Layout';
 
 import { reset as resetLectureFocus } from '../redux/actions/timetable/lectureFocus';
 import { reset as resetList } from '../redux/actions/timetable/list';
@@ -29,9 +37,6 @@ import SummarySubSection from '../components/sections/timetable/timetableandinfo
 import ExamSubSection from '../components/sections/timetable/timetableandinfos/ExamSubSection';
 import ShareSubSection from '../components/sections/timetable/timetableandinfos/ShareSubSection';
 
-import semesterShape from '../shapes/model/subject/SemesterShape';
-import { myPseudoTimetableShape } from '../shapes/model/timetable/TimetableShape';
-import userShape from '../shapes/model/session/UserShape';
 import { parseQueryString } from '@/common/utils/parseQueryString';
 
 const TimetablePage = () => {
@@ -63,47 +68,39 @@ const TimetablePage = () => {
   }, [dispatch]);
 
   return (
-    <>
-      <section className={classNames('content', 'content--no-scroll')}>
-        <div
-          className={classNames(
-            'page-grid',
-            'page-grid--timetable',
-            isLectureListOpenOnMobile ? 'page-grid--timetable--mobile-expanded' : null,
-          )}>
+    <Content noScroll>
+      <PageGridTimetable mobileExpanded={!!isLectureListOpenOnMobile}>
+        <AreaLectureDetail>
           <LectureDetailSection />
+        </AreaLectureDetail>
+        <AreaLectureListTabs>
           <LectureListTabs />
+        </AreaLectureListTabs>
+        <AreaLectureList>
           <LectureListSection />
-          <div
-            className={classNames(
-              'section',
-              'section--semester-and-timetable-list',
-              !isPortrait && 'section--transparent',
-              isPortrait && 'section--modal',
-              isTimetableTabsOpenOnMobile ? null : 'mobile-hidden',
-            )}>
-            <CloseButton onClick={() => dispatch(setIsTimetableTabsOpenOnMobile(false))} />
-            <TimetableTabs />
-            <SemesterSection startSemester={location.state?.startSemester} />
-          </div>
-          <div className={classNames('section', 'section--timetable-and-infos')}>
-            <TimetableSubSection />
-            <Divider
-              orientation={{ desktop: Divider.Orientation.VERTICAL, mobile: Divider.Orientation.HORIZONTAL }}
-              isVisible={true}
-              gridArea="divider-main"
-            />
-            <MapSubSection />
-            <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={{ desktop: true, mobile: false }} gridArea="divider-sub-1" />
-            <SummarySubSection />
-            <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={{ desktop: true, mobile: false }} gridArea="divider-sub-2" />
-            <ExamSubSection />
-            <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={{ desktop: true, mobile: !isLectureListOpenOnMobile }} gridArea="divider-sub-3" />
-            <ShareSubSection />
-          </div>
-        </div>
-      </section>
-    </>
+        </AreaLectureList>
+        <AreaSemesterAndTimetableTabs>
+          <CloseButton onClick={() => dispatch(setIsTimetableTabsOpenOnMobile(false))} />
+          <TimetableTabs />
+          <SemesterSection startSemester={location.state?.startSemester} />
+        </AreaSemesterAndTimetableTabs>
+        <AreaTimetableAndInfos>
+          <TimetableSubSection />
+          <Divider
+            orientation={{ desktop: Divider.Orientation.VERTICAL, mobile: Divider.Orientation.HORIZONTAL }}
+            isVisible={true}
+            gridArea="divider-main"
+          />
+          <MapSubSection />
+          <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={{ desktop: true, mobile: false }} gridArea="divider-sub-1" />
+          <SummarySubSection />
+          <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={{ desktop: true, mobile: false }} gridArea="divider-sub-2" />
+          <ExamSubSection />
+          <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={{ desktop: true, mobile: !isLectureListOpenOnMobile }} gridArea="divider-sub-3" />
+          <ShareSubSection />
+        </AreaTimetableAndInfos>
+      </PageGridTimetable>
+    </Content>
   );
 };
 
