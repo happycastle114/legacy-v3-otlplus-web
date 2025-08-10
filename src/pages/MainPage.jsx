@@ -7,8 +7,6 @@ import { range } from 'lodash';
 import { Link } from 'react-router-dom';
 import { ZaboEmbed } from 'zabo-embed';
 
-import { appBoundClassNames as classNames } from '../common/boundClassNames';
-
 import Footer from '../common/guideline/components/Footer';
 import TodaysTimetableSection from '../components/sections/main/TodaysTimetableSection';
 import AcademicScheduleSection from '../components/sections/main/AcademicScheduleSection';
@@ -22,6 +20,14 @@ import MainSearchSection from '../components/sections/main/MainSearchSection';
 import userShape from '../shapes/model/session/UserShape';
 import NoticeSection from '../components/sections/main/NoticeSection';
 import RateFeedSection from '../components/sections/main/RateFeedSection';
+import {
+  Content,
+  PageGridMain,
+  FeedsColumn,
+  FeedPlaceholder,
+  MainDate,
+  MainImage,
+} from '@/common/styled/Layout';
 
 const MainPage = () => {
   const { t } = useTranslation();
@@ -56,9 +62,7 @@ const MainPage = () => {
     if (!user) return;
     if (!contentRef.current) return;
 
-    const columns = Array.from(
-      contentRef.current.querySelectorAll(`.${classNames('page-grid--main')} > div`),
-    );
+    const columns = Array.from(contentRef.current.querySelectorAll(`[data-feeds-column]`));
 
     const isBottomReached = columns.some(
       (cl) => cl.lastChild.getBoundingClientRect().top < window.innerHeight + SCROLL_BOTTOM_PADDING,
@@ -140,7 +144,7 @@ const MainPage = () => {
   }, [user]);
 
   React.useEffect(() => {
-    if (user) return; // nothing when user becomes falsy
+    if (user) return;
   }, [user]);
 
   const mapFeedToSection = (feed, date) => {
@@ -208,29 +212,22 @@ const MainPage = () => {
 
   return (
     <>
-      <section className={classNames('main-image')}>
+      <MainImage>
         <MainSearchSection />
-      </section>
-      <section className={classNames('content')} ref={contentRef}>
-        <div className={classNames('page-grid', 'page-grid--main')}>
+      </MainImage>
+      <Content ref={contentRef}>
+        <PageGridMain>
           {range(columnNum).map((i) => (
-            <div
-              style={{
-                gridArea: `feeds-column-${i + 1}`,
-                position: 'relative',
-                overflow: 'initial',
-                minWidth: 0,
-              }}
-              key={i}>
+            <FeedsColumn index={i + 1} data-feeds-column key={i}>
               {feeds.filter((v, i2) => i2 % columnNum === i)}
-              <div style={{ position: 'absolute', width: '100%' }}>
+              <FeedPlaceholder>
                 {range(10).map((j) => (
-                  <div className={classNames('section', 'section--feed--placeholder')} key={j} />
+                  <div key={j} />
                 ))}
-              </div>
-            </div>
+              </FeedPlaceholder>
+            </FeedsColumn>
           ))}
-          <div className={classNames('main-date')}>
+          <MainDate>
             {user ? (
               <span onClick={() => fetchFeeds(getPrevDate())}>{t('ui.button.loadMore')}</span>
             ) : process.env.VITE_DEV_MODE === 'true' ? (
@@ -241,9 +238,9 @@ const MainPage = () => {
                 <div>{t('ui.message.signInForMore')}</div>
               </>
             )}
-          </div>
-        </div>
-      </section>
+          </MainDate>
+        </PageGridMain>
+      </Content>
       <Footer />
     </>
   );
