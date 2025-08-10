@@ -1,11 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { asyncSleep } from '@/common/utils/asyncSleep';
-import classNames from 'classnames';
-import style from '@/common/sass/popup/_animatedScrimPopup.module.scss';
-import globalStyle from '@/sass/global.module.scss';
 import { motion } from 'framer-motion';
 import { useOnEscape } from '@/common/utils/interaction/useOnKeyPress';
+import styled from 'styled-components';
 
 const PopupPortal: React.FC<React.PropsWithChildren> = (props) => {
   const [el, setEl] = React.useState<HTMLDivElement | undefined>();
@@ -35,13 +33,33 @@ interface IAnimatedScrimPopupProps {
   noEscapeKeyBinding?: boolean;
 }
 
-const decideContainerClassName = (isOpen: boolean): string => {
-  return classNames(
-    style.container,
-    isOpen ? style.containerShouldRender : style.containerShouldNotRender,
-    globalStyle.scrollNoDisplay,
-  );
-};
+const ScrimContainer = styled(motion.div)<{ shouldRender: boolean }>`
+  --opacity: 100%;
+  z-index: 10000;
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 0;
+  background-color: rgba(33, 33, 33, 0.4);
+  overflow-y: scroll;
+  justify-content: center;
+  align-items: center;
+  display: ${(p) => (p.shouldRender ? 'flex' : 'none')};
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const ContainerInner = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
 
 const AnimatedScrimPopup: React.FC<React.PropsWithChildren<IAnimatedScrimPopupProps>> = (props) => {
   const ref = React.useRef<HTMLDivElement | null>(null);
@@ -104,8 +122,8 @@ const AnimatedScrimPopup: React.FC<React.PropsWithChildren<IAnimatedScrimPopupPr
   return (
     <div>
       <PopupPortal>
-        <motion.div
-          className={decideContainerClassName(_isOpen)}
+        <ScrimContainer
+          shouldRender={_isOpen}
           data-testid="popupContainer"
           ref={ref}
           onClick={handleClose}
@@ -113,8 +131,8 @@ const AnimatedScrimPopup: React.FC<React.PropsWithChildren<IAnimatedScrimPopupPr
           initial={{ opacity: props.isOpen ? 0 : 1 }}
           animate={{ opacity: props.isOpen ? 1 : 0 }}
           transition={{ duration: 0.15 }}>
-          <div className={style.containerInner}>{props.children}</div>
-        </motion.div>
+          <ContainerInner>{props.children}</ContainerInner>
+        </ScrimContainer>
       </PopupPortal>
     </div>
   );

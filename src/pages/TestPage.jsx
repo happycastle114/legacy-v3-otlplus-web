@@ -1,10 +1,10 @@
 /* eslint no-console: "off" */
 
-import React, { Component } from 'react';
+import React from 'react';
 import axios from 'axios';
 
-class TestPage extends Component {
-  componentDidMount() {
+const TestPage = () => {
+  React.useEffect(() => {
     axios
       .get('/api/feeds', {
         params: {
@@ -17,11 +17,9 @@ class TestPage extends Component {
       .catch((error) => {
         console.log(error);
       });
-  }
+  }, []);
 
-  render() {
-    return <div />;
-  }
-}
+  return <div />;
+};
 
 export default TestPage;

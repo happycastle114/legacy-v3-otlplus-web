@@ -1,7 +1,18 @@
 import React from 'react';
 import AnimatedScrimPopup from '../animatedScrimPopup/AnimatedScrimPopup';
+import styled from 'styled-components';
 
-import style from '../../../sass/popup/_bannerPopup.module.scss';
+const PopupContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: scroll;
+  flex-direction: column;
+`;
+
+const PopupBox = styled.div``;
 
 interface IBannerPopupProps {
   popupOpen: boolean;
@@ -12,16 +23,15 @@ interface IBannerPopupProps {
 const BannerPopup: React.FC<React.PropsWithChildren<IBannerPopupProps>> = (props) => {
   return (
     <AnimatedScrimPopup isOpen={props.popupOpen} onClose={() => props.setPopupOpen(false)}>
-      <div className={style.popupContainer} onClick={() => props.setPopupOpen(false)}>
-        <div
-          className={style.popupBox}
+      <PopupContainer onClick={() => props.setPopupOpen(false)}>
+        <PopupBox
           onClick={(e) => {
             e.stopPropagation();
           }}>
           {props.children}
-        </div>
+        </PopupBox>
         {props.footerArea}
-      </div>
+      </PopupContainer>
     </AnimatedScrimPopup>
   );
 };
