@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
-import { appBoundClassNames as classNames } from '../common/boundClassNames';
-
 import Divider from '../components/Divider';
 import MySummarySubSection from '../components/sections/write-reviews/reviewsleft/MySummarySubSection';
 import TakenLecturesSubSection from '../components/sections/write-reviews/reviewsleft/TakenLecturesSubSection';
@@ -28,6 +26,7 @@ import reviewsFocusShape from '../shapes/state/write-reviews/ReviewsFocusShape';
 import OtlplusPlaceholder from '../components/OtlplusPlaceholder';
 import { useLocation } from 'react-router';
 import { parseQueryString } from '@/common/utils/parseQueryString';
+import { Content, PageGridWriteReviews, WriteReviewsLeft, WriteReviewsRight } from '@/common/styled/Layout';
 
 const WriteReviewsPage = () => {
   const { t } = useTranslation();
@@ -53,16 +52,7 @@ const WriteReviewsPage = () => {
 
   const getReviewsSubSection = (focusFrom) => {
     if (focusFrom === ReviewsFocusFrom.NONE) {
-      return (
-        <div
-          className={classNames(
-            'subsection',
-            'subsection--flex',
-            'subsection--write-reviews-right',
-          )}>
-          <OtlplusPlaceholder />
-        </div>
-      );
+      return <OtlplusPlaceholder />;
     }
     if (focusFrom === ReviewsFocusFrom.LECTURE) {
       return <LectureReviewsSubSection />;
@@ -84,26 +74,20 @@ const WriteReviewsPage = () => {
 
   return (
     <>
-      <section className={classNames('content', 'content--no-scroll')}>
-        <div className={classNames('page-grid', 'page-grid--write-reviews')}>
-          <div className={classNames('section', 'section--write-reviews-left')}>
+      <Content noScroll>
+        <PageGridWriteReviews>
+          <WriteReviewsLeft>
             <MySummarySubSection />
             <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={true} />
             <TakenLecturesSubSection />
             <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={true} />
             <ReviewsMenusSubSection />
-          </div>
-          <div
-            className={classNames(
-              'section',
-              'section--write-reviews-right',
-              isPortrait && 'section--modal',
-              reviewsFocus.from !== ReviewsFocusFrom.NONE ? null : 'mobile-hidden',
-            )}>
+          </WriteReviewsLeft>
+          <WriteReviewsRight modal={!!isPortrait} transparent={false}>
             {getReviewsSubSection(reviewsFocus.from)}
-          </div>
-        </div>
-      </section>
+          </WriteReviewsRight>
+        </PageGridWriteReviews>
+      </Content>
     </>
   );
 };
