@@ -11,7 +11,6 @@ const createStore = (preloadedState: any) =>
 describe('TimetablePage', () => {
   it('renders', () => {
     const preloaded = {
-      timetable: { timetable: { isTimetableTabsOpenOnMobile: true, myTimetable: {} } },
       common: { user: { user: { id: 1 } }, media: { isPortrait: false } },
       timetable: {
         list: { isLectureListOpenOnMobile: false },

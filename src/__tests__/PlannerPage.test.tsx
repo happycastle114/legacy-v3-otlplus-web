@@ -10,7 +10,9 @@ const createStore = (preloadedState: any) =>
 
 describe('PlannerPage', () => {
   it('renders', () => {
-    const preloaded = {} as any;
+    const preloaded = {
+      planner: { planner: { isTrackSettingsSectionOpen: false, selectedPlanner: null } },
+    } as any;
     const store = createStore(preloaded);
 
     render(
