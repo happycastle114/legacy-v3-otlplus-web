@@ -14,4 +14,11 @@ module.exports = {
   },
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   collectCoverageFrom: ['**/*.{js,jsx,ts,tsx}', '!**/node_modules/**'],
+  globals: {
+    'ts-jest': {
+      diagnostics: false,
+      isolatedModules: true,
+      tsconfig: 'tsconfig.json',
+    },
+  },
 };

@@ -2,7 +2,34 @@ import React from 'react';
 import Slider from 'react-slick';
 import { useTranslation } from 'react-i18next';
 import ImageCarouselBanner from './carouselPages/ImageCarouselBanner';
-import style from '../../sass/_campaign.module.scss';
+import styled from 'styled-components';
+
+const FullscreenSection = styled.div`
+  position: relative;
+  background-color: var(--color-section-background, #ffffff);
+  border-radius: var(--section-border-radius, 6px);
+  box-shadow: var(--section-box-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+  overflow: hidden;
+  margin-bottom: var(--section-margin-bottom, 12px);
+  padding: 0;
+
+  :global(.slick-dots) {
+    transform: translateY(-30px);
+    button::before {
+      font-size: 10px;
+      color: var(--color-highlight, #e54c65);
+    }
+    :global(.slick-active) {
+      button::before {
+        color: var(--color-highlight, #e54c65);
+        opacity: 1;
+      }
+    }
+    li {
+      margin: 0;
+    }
+  }
+`;
 
 const ltos = (l: string) => (l === 'en' ? 'en' : 'ko');
 
@@ -16,7 +43,7 @@ const CampaignSection: React.FC = () => {
   });
 
   return (
-    <div className={style.fullscreenSection}>
+    <FullscreenSection>
       <Slider dots={true} arrows={false} infinite speed={800} autoplay={true} autoplaySpeed={8000}>
         <ImageCarouselBanner
           trackingId="app-launch"
@@ -43,7 +70,7 @@ const CampaignSection: React.FC = () => {
           }}
         />
       </Slider>
-    </div>
+    </FullscreenSection>
   );
 };
 

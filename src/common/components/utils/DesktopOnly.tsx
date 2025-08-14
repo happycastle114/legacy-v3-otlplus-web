@@ -1,8 +1,14 @@
 import React from 'react';
-import style from '../../sass/utils/_desktopOnly.module.scss';
+import styled from 'styled-components';
+
+const DesktopOnlyWrapper = styled.div`
+  @media (max-aspect-ratio: calc(4/3)) {
+    display: none;
+  }
+`;
 
 const DesktopOnly: React.FC<React.PropsWithChildren> = (props) => {
-  return <div className={style.desktopOnly}>{props.children}</div>;
+  return <DesktopOnlyWrapper>{props.children}</DesktopOnlyWrapper>;
 };
 
 export default DesktopOnly;

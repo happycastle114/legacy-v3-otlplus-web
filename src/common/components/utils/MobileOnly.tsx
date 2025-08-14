@@ -1,8 +1,14 @@
 import React from 'react';
-import style from '../../sass/utils/_mobileOnly.module.scss';
+import styled from 'styled-components';
+
+const MobileOnlyWrapper = styled.div`
+  @media (min-aspect-ratio: calc(4/3)) {
+    display: none;
+  }
+`;
 
 const MobileOnly: React.FC<React.PropsWithChildren> = (props) => {
-  return <div className={style.mobileOnly}>{props.children}</div>;
+  return <MobileOnlyWrapper>{props.children}</MobileOnlyWrapper>;
 };
 
 export default MobileOnly;

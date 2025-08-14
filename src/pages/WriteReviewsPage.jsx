@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withTranslation } from 'react-i18next';
-
-import { appBoundClassNames as classNames } from '../common/boundClassNames';
+import { useTranslation } from 'react-i18next';
 
 import Divider from '../components/Divider';
 import MySummarySubSection from '../components/sections/write-reviews/reviewsleft/MySummarySubSection';
@@ -28,141 +26,70 @@ import reviewsFocusShape from '../shapes/state/write-reviews/ReviewsFocusShape';
 import OtlplusPlaceholder from '../components/OtlplusPlaceholder';
 import { useLocation } from 'react-router';
 import { parseQueryString } from '@/common/utils/parseQueryString';
+import { Content, PageGridWriteReviews, WriteReviewsLeft, WriteReviewsRight } from '@/common/styled/Layout';
 
-class WriteReviewsPage extends Component {
-  componentDidMount() {
-    const { setReviewsFocusDispatch } = this.props;
-    // eslint-disable-next-line react/destructuring-assignment
-    const { startList } = parseQueryString(this.props.location.state) || {};
+const WriteReviewsPage = () => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const isPortrait = useSelector((state) => state.common.media.isPortrait);
+  const reviewsFocus = useSelector((state) => state.writeReviews.reviewsFocus);
 
-    if (startList) {
-      setReviewsFocusDispatch(startList, null);
-    }
-  }
-
-  componentWillUnmount() {
-    const {
-      resetReviewsFocusDispatch,
-      resetLatestReviewsDispatch,
-      resetLikedReviewsDispatch,
-      resetRankedReviewsDispatch,
-    } = this.props;
-
-    resetReviewsFocusDispatch();
-    resetLatestReviewsDispatch();
-    resetLikedReviewsDispatch();
-    resetRankedReviewsDispatch();
-  }
-
-  render() {
-    const { isPortrait, reviewsFocus } = this.props;
-
-    const getReviewsSubSection = (focusFrom) => {
-      if (focusFrom === ReviewsFocusFrom.NONE) {
-        return (
-          <div
-            className={classNames(
-              'subsection',
-              'subsection--flex',
-              'subsection--write-reviews-right',
-            )}>
-            <OtlplusPlaceholder />
-          </div>
-        );
-      }
-      if (focusFrom === ReviewsFocusFrom.LECTURE) {
-        return <LectureReviewsSubSection />;
-      }
-      if (focusFrom === ReviewsFocusFrom.REVIEWS_LATEST) {
-        return <LatestReviewsSubSection />;
-      }
-      if (focusFrom === ReviewsFocusFrom.REVIEWS_MY) {
-        return <MyReviewsSubSection />;
-      }
-      if (focusFrom === ReviewsFocusFrom.REVIEWS_LIKED) {
-        return <LikedReviewsSubSection />;
-      }
-      if (focusFrom === ReviewsFocusFrom.REVIEWS_RANKED) {
-        return <RankedReviewsSubSection />;
-      }
-      return null;
-    };
-
-    return (
-      <>
-        <section className={classNames('content', 'content--no-scroll')}>
-          <div className={classNames('page-grid', 'page-grid--write-reviews')}>
-            <div className={classNames('section', 'section--write-reviews-left')}>
-              <MySummarySubSection />
-              <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={true} />
-              <TakenLecturesSubSection />
-              <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={true} />
-              <ReviewsMenusSubSection />
-            </div>
-            <div
-              className={classNames(
-                'section',
-                'section--write-reviews-right',
-                isPortrait && 'section--modal',
-                reviewsFocus.from !== ReviewsFocusFrom.NONE ? null : 'mobile-hidden',
-              )}>
-              {getReviewsSubSection(reviewsFocus.from)}
-            </div>
-          </div>
-        </section>
-      </>
-    );
-  }
-}
-
-const mapStateToProps = (state) => ({
-  isPortrait: state.common.media.isPortrait,
-  reviewsFocus: state.writeReviews.reviewsFocus,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  setReviewsFocusDispatch: (from, lecture) => {
-    dispatch(setReviewsFocus(from, lecture));
-  },
-  resetReviewsFocusDispatch: () => {
-    dispatch(resetReviewsFocus());
-  },
-  resetLatestReviewsDispatch: () => {
-    dispatch(resetLatestReviews());
-  },
-  resetLikedReviewsDispatch: () => {
-    dispatch(resetLikedReviews());
-  },
-  resetRankedReviewsDispatch: () => {
-    dispatch(resetRankedReviews());
-  },
-});
-
-WriteReviewsPage.propTypes = {
-  location: PropTypes.shape({
-    state: PropTypes.shape({
-      startList: PropTypes.oneOf(Object.values(ReviewsFocusFrom)),
-    }),
-  }).isRequired,
-
-  isPortrait: PropTypes.bool.isRequired,
-  reviewsFocus: reviewsFocusShape.isRequired,
-
-  setReviewsFocusDispatch: PropTypes.func.isRequired,
-  resetReviewsFocusDispatch: PropTypes.func.isRequired,
-  resetLatestReviewsDispatch: PropTypes.func.isRequired,
-  resetLikedReviewsDispatch: PropTypes.func.isRequired,
-  resetRankedReviewsDispatch: PropTypes.func.isRequired,
-};
-
-const ClassComponent = withTranslation()(
-  connect(mapStateToProps, mapDispatchToProps)(WriteReviewsPage),
-);
-
-const WriteReviewsPageFC = () => {
   const location = useLocation();
 
-  return <ClassComponent location={location} />;
+  React.useEffect(() => {
+    const { startList } = parseQueryString(location.state) || {};
+    if (startList) {
+      dispatch(setReviewsFocus(startList, null));
+    }
+    return () => {
+      dispatch(resetReviewsFocus());
+      dispatch(resetLatestReviews());
+      dispatch(resetLikedReviews());
+      dispatch(resetRankedReviews());
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getReviewsSubSection = (focusFrom) => {
+    if (focusFrom === ReviewsFocusFrom.NONE) {
+      return <OtlplusPlaceholder />;
+    }
+    if (focusFrom === ReviewsFocusFrom.LECTURE) {
+      return <LectureReviewsSubSection />;
+    }
+    if (focusFrom === ReviewsFocusFrom.REVIEWS_LATEST) {
+      return <LatestReviewsSubSection />;
+    }
+    if (focusFrom === ReviewsFocusFrom.REVIEWS_MY) {
+      return <MyReviewsSubSection />;
+    }
+    if (focusFrom === ReviewsFocusFrom.REVIEWS_LIKED) {
+      return <LikedReviewsSubSection />;
+    }
+    if (focusFrom === ReviewsFocusFrom.REVIEWS_RANKED) {
+      return <RankedReviewsSubSection />;
+    }
+    return null;
+  };
+
+  return (
+    <>
+      <Content noScroll>
+        <PageGridWriteReviews>
+          <WriteReviewsLeft>
+            <MySummarySubSection />
+            <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={true} />
+            <TakenLecturesSubSection />
+            <Divider orientation={Divider.Orientation.HORIZONTAL} isVisible={true} />
+            <ReviewsMenusSubSection />
+          </WriteReviewsLeft>
+          <WriteReviewsRight modal={!!isPortrait} transparent={false}>
+            {getReviewsSubSection(reviewsFocus.from)}
+          </WriteReviewsRight>
+        </PageGridWriteReviews>
+      </Content>
+    </>
+  );
 };
 
-export default WriteReviewsPageFC;
+export default WriteReviewsPage;
